@@ -42,32 +42,3 @@ Happy Coding! 🚀
 
 
 
-
-```java
-
-## 📌 Projects in This Series
-### 1️⃣ To-Do List App ✅
-A simple yet powerful to-do list application that includes:
-- **Features**: Add, remove, and mark tasks as completed
-- **Concepts Used**: DOM Manipulation, Local Storage, Event Listeners
-
-### 2️⃣ Weather App 🌦️
-A real-time weather app using OpenWeather API:
-- **Features**: Fetching weather data, dynamic UI updates
-- **Concepts Used**: API Fetch, Async/Await, Error Handling
-
-### 3️⃣ Quiz App 🎯
-An interactive quiz application:
-- **Features**: Timed quizzes, dynamic question generation
-- **Concepts Used**: Event Handling, JSON Parsing, Local Storage
-
-### 4️⃣ Expense Tracker 💰
-A finance management app:
-- **Features**: Add/delete expenses, category-based tracking
-- **Concepts Used**: Array Methods, Data Storage, Chart.js
-
-### 5️⃣ E-commerce Shopping Cart 🛒
-A basic shopping cart functionality:
-- **Features**: Product listing, cart management, checkout process
-- **Concepts Used**: ES6 Modules, Local Storage, State Management
-```
