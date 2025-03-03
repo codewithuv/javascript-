@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>learning Javascript</h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+</body>
+<script>
+    // const saydate=function(str){ 
+    //     console.log(`todays date ${str} `,Date.now().toString())}
+    let intervalId;
+    function clicked(){
+    const saydate=function(str){ 
+        console.log(`todays date ${str} `,Date.now().toString())}
+         intervalId=setInterval(saydate,2000, "is");
+    }
+    document.querySelector('#start')
+    .addEventListener('click',function(){
+        console.log("helo")    
+        clicked();
+    })
+    
+    document.querySelector('#stop').addEventListener('click',function(){ 
+    console.log('stop');
+    clearInterval(intervalId);
+    }    )    
+</script>
+</html>  

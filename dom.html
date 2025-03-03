@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <ul class="language">
+        <li>Javascript</li>
+    </ul>
+    <script>
+        function addelement (languageName){
+            const li = document.createElement('li')
+            li.innerHTML =`${languageName} `;
+            document.querySelector('.language').appendChild(li);
+
+        }
+        addelement("python");
+        addelement("c++");
+        
+        function addOptielement(languageName){
+            const li = document.createElement('li');
+            li.appendChild(document.createTextNode(languageName)); 
+            document.querySelector('.language').appendChild(li);
+        }
+        addOptielement("typescript")
+
+
+        // edit
+        const secondlan =document.querySelector("li:nth-child(2)")
+        // secondlan.innerHTML="mojo";
+
+        const newli=document.createElement('li');
+        newli.textContent="Java";
+        secondlan.replaceWith(newli);
+        
+        
+        
+        // edit
+        const firstlang = document.querySelector("li:first-child");
+        firstlang.outerHTML=`<li>Typescript</li>`
+
+        //remove
+        const  lastlang=document.querySelector('li:last-child')
+        lastlang.remove();
+    </script>
+</body>
+</html>

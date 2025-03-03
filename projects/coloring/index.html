@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>closure coloring</title>
+</head>
+<body>
+
+    <button id="orange">orange</button>
+    <button id="green">green</button>
+    <script>
+        
+        function clickHandler (color){
+            console.log("clicked")
+            return ()=>{
+                console.log('inside');
+                document.body.style.background=`${color}`;
+            }
+        }   
+
+        document.getElementById('orange').onclick =clickHandler("orange");
+        document.getElementById('green').onclick =clickHandler("green");
+
+
+    </script>
+</body>
+</html>
