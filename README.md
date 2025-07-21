@@ -12,7 +12,7 @@ Welcome to my **JavaScript Series**, where I have built multiple projects while 
 - API integrations and modern JavaScript frameworks
 
 
-## 🎯 Projects
+## 🎯 Projects links - 
 - [🎮 Guess The Number Game](https://javascript-kappa-lilac.vercel.app/) – A fun number guessing game built using HTML, CSS, and JavaScript.
 
 
