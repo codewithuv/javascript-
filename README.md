@@ -14,7 +14,7 @@ Welcome to my **JavaScript Series**, where I have built multiple projects while 
 
 ## 🎯 Projects links - 
 - [🎮 Guess The Number Game](https://javascript-kappa-lilac.vercel.app/) – A fun number guessing game built using HTML, CSS, and JavaScript.
-
+-  [🎮 KeyBoard checker ](https://keyboardchecker.vercel.app/) – Check your keyboard 
 
 
 ## 🛠️ Technologies Used
