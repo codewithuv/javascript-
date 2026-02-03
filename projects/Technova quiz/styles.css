@@ -61,6 +61,7 @@ button:hover {
     cursor: pointer;
     background-color: #333333;
     color: #ffffff;
+    transition: all 0.3s ease;
 }
 
 .option:hover {
@@ -69,6 +70,66 @@ button:hover {
 
 .option.selected {
     background-color: #555555;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background-color: #555555;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1px solid #777777;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #45a049);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-bottom: 15px;
+}
+
+.score-display {
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-top: 15px;
+}
+
+/* Results Container Styles */
+.results-container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 2px solid #4caf50;
+}
+
+.score-result {
+    margin-bottom: 15px;
+}
+
+.score-percentage {
+    font-size: 48px;
+    font-weight: bold;
+    color: #4caf50;
+    margin: 10px 0;
+}
+
+.time-result {
+    background-color: #2d2d2d;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.time-result p {
+    margin: 5px 0;
 }
 
 @media (max-width: 320px) {

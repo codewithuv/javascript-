@@ -34,8 +34,81 @@ const questions = [
 let currentQuestionIndex = 0;
 let score = 0;
 let selectedAnswer = null;
+let quizStartTime = null;
+let quizEndTime = null;
+let shuffledQuestions = [];
 
 const app = document.getElementById('app');
+
+// Fisher-Yates Shuffle Algorithm
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Shuffle options within each question
+function shuffleOptions(questionsArray) {
+    return questionsArray.map(q => {
+        const shuffledOptions = shuffleArray(q.options);
+        // Update correctAnswer index to match new position
+        const correctOptionText = q.options[q.correctAnswer];
+        const newCorrectAnswer = shuffledOptions.indexOf(correctOptionText);
+        return {
+            ...q,
+            options: shuffledOptions,
+            correctAnswer: newCorrectAnswer
+        };
+    });
+}
+
+// Play audio feedback using Web Audio API
+function playSound(isCorrect) {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        if (isCorrect) {
+            // Higher pitch for correct answer
+            oscillator.frequency.value = 800;
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        } else {
+            // Lower pitch for incorrect answer
+            oscillator.frequency.value = 300;
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+    } catch (e) {
+        console.log('Audio context not available');
+    }
+}
+
+// Format time display
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+        return `${hours}h ${minutes}m ${secs}s`;
+    } else if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+    } else {
+        return `${secs}s`;
+    }
+}
 
 function renderWelcome() {
     app.innerHTML = `
@@ -49,19 +122,29 @@ function renderWelcome() {
 function startQuiz() {
     currentQuestionIndex = 0;
     score = 0;
+    quizStartTime = Date.now();
+    quizEndTime = null;
+    // Shuffle questions and their options
+    shuffledQuestions = shuffleArray(questions);
+    shuffledQuestions = shuffleOptions(shuffledQuestions);
     renderQuestion();
 }
 
 function renderQuestion() {
-    const q = questions[currentQuestionIndex];
+    const q = shuffledQuestions[currentQuestionIndex];
+    const progressPercent = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+    
     app.innerHTML = `
-        <h2>Question ${currentQuestionIndex + 1} of ${questions.length}</h2>
-        <p>${q.question}</p>
+        <div class="progress-container">
+            <div class="progress-bar" style="width: ${progressPercent}%"></div>
+        </div>
+        <p class="progress-text">Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}</p>
+        <h2>${q.question}</h2>
         <div class="options">
             ${q.options.map((option, index) => `<div class="option" data-index="${index}">${option}</div>`).join('')}
         </div>
         <p id="feedback" class="hidden"></p>
-        <p>Score: ${score}/${questions.length}</p>
+        <p class="score-display">Score: ${score}/${shuffledQuestions.length}</p>
     `;
     document.querySelectorAll('.option').forEach(option => {
         option.addEventListener('click', selectAnswer);
@@ -77,15 +160,19 @@ function selectAnswer(event) {
 }
 
 function checkAnswer() {
-    const q = questions[currentQuestionIndex];
+    const q = shuffledQuestions[currentQuestionIndex];
     const feedback = document.getElementById('feedback');
-    if (selectedAnswer === q.correctAnswer) {
+    const isCorrect = selectedAnswer === q.correctAnswer;
+    
+    if (isCorrect) {
         score++;
         feedback.className = 'correct';
         feedback.textContent = `Correct! ${q.explanation}`;
+        playSound(true);
     } else {
         feedback.className = 'incorrect';
         feedback.textContent = `Incorrect. ${q.explanation}`;
+        playSound(false);
     }
     feedback.classList.remove('hidden');
     setTimeout(nextQuestion, 2000);
@@ -94,25 +181,42 @@ function checkAnswer() {
 function nextQuestion() {
     currentQuestionIndex++;
     selectedAnswer = null;
-    if (currentQuestionIndex < questions.length) {
+    if (currentQuestionIndex < shuffledQuestions.length) {
         renderQuestion();
     } else {
+        quizEndTime = Date.now();
         renderResults();
     }
 }
 
 function renderResults() {
+    const timeTaken = Math.floor((quizEndTime - quizStartTime) / 1000);
+    const timeDisplay = formatTime(timeTaken);
+    const percentage = Math.round((score / shuffledQuestions.length) * 100);
+    
     let message = '';
-    if (score === 5) {
+    if (score === shuffledQuestions.length) {
         message = "Excellent! You're off to a great start.";
-    } else if (score >= 3) {
+    } else if (score >= shuffledQuestions.length * 0.6) {
         message = "Nice job! Review our documentation to improve.";
     } else {
         message = "Don't worry — visit our onboarding resources again.";
     }
+    
     app.innerHTML = `
+        <div class="progress-container">
+            <div class="progress-bar" style="width: 100%"></div>
+        </div>
         <h1>Quiz Complete</h1>
-        <p>You scored ${score} out of ${questions.length}.</p>
+        <div class="results-container">
+            <div class="score-result">
+                <p class="score-percentage">${percentage}%</p>
+                <p>You scored ${score} out of ${shuffledQuestions.length}.</p>
+            </div>
+            <div class="time-result">
+                <p><strong>Time Taken:</strong> ${timeDisplay}</p>
+            </div>
+        </div>
         <p>${message}</p>
         <button id="retake-btn">Retake Quiz</button>
     `;
